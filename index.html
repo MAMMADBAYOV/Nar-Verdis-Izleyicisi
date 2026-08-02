@@ -290,32 +290,65 @@ footer{margin-top:32px;font-size:11px;color:var(--text-faint);text-align:center;
 
 <script>
 /* ============ Storage polyfill ============ */
-/* Falls back to browser localStorage when window.storage (Claude Artifact API) isn't available,
-   so the app works standalone in any browser / hosting. */
-if(!window.storage){
-  const NAR_PREFIX='nar_storage_';
+/* =========================================================
+   Storage Polyfill
+   Browser fallback when Claude Artifact Storage is unavailable.
+========================================================= */
+
+const STORAGE_PREFIX = "nar_storage_";
+
+if (!window.storage) {
   window.storage = {
-    async get(key){
-      const raw=localStorage.getItem(NAR_PREFIX+key);
-      if(raw===null) throw new Error('Key not found: '+key);
-      return {key, value:raw, shared:false};
-    },
-    async set(key,value){
-      localStorage.setItem(NAR_PREFIX+key, value);
-      return {key, value, shared:false};
-    },
-    async delete(key){
-      localStorage.removeItem(NAR_PREFIX+key);
-      return {key, deleted:true, shared:false};
-    },
-    async list(prefix){
-      prefix=prefix||'';
-      const keys=[];
-      for(let i=0;i<localStorage.length;i++){
-        const k=localStorage.key(i);
-        if(k && k.startsWith(NAR_PREFIX+prefix)) keys.push(k.slice(NAR_PREFIX.length));
+    async get(key) {
+      const value = localStorage.getItem(STORAGE_PREFIX + key);
+
+      if (value === null) {
+        throw new Error(`Key not found: ${key}`);
       }
-      return {keys, prefix, shared:false};
+
+      return {
+        key,
+        value,
+        shared: false
+      };
+    },
+
+    async set(key, value) {
+      localStorage.setItem(STORAGE_PREFIX + key, value);
+
+      return {
+        key,
+        value,
+        shared: false
+      };
+    },
+
+    async delete(key) {
+      localStorage.removeItem(STORAGE_PREFIX + key);
+
+      return {
+        key,
+        deleted: true,
+        shared: false
+      };
+    },
+
+    async list(prefix = "") {
+      const keys = [];
+
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+
+        if (key && key.startsWith(STORAGE_PREFIX + prefix)) {
+          keys.push(key.slice(STORAGE_PREFIX.length));
+        }
+      }
+
+      return {
+        keys,
+        prefix,
+        shared: false
+      };
     }
   };
 }
