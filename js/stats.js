@@ -1,15 +1,19 @@
-/* ============ Stats Modal ============ */
+/* ============ Stats ============ */
 
-function initStatsModal() {
-  document.getElementById('statsBtn').onclick = async () => {
-    renderBadgesLevel();
-    await renderWeeklySummary();
-    await renderMeasureLog();
+document.getElementById('statsBtn').onclick=async()=>{
 
-    document.getElementById('statsModal').classList.add('show');
-  };
+  renderBadgesLevel();
 
-  document.getElementById('statsCloseBtn').onclick = () => {
-    document.getElementById('statsModal').classList.remove('show');
-  };
-}
+  await renderWeeklySummary();
+
+  await renderMeasureLog();
+
+  document.getElementById('statsModal').classList.add('show');
+
+};
+
+document.getElementById('statsCloseBtn').onclick=()=>{
+
+  document.getElementById('statsModal').classList.remove('show');
+
+};
