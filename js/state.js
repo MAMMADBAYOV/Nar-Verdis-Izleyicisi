@@ -1,7 +1,7 @@
 /* ============ Global State ============ */
 
 // Habits
-let state = {
+const state = {
   date: todayKey(),
   log: emptyLog()
 };
