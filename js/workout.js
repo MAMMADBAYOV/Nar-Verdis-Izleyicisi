@@ -41,7 +41,10 @@ async function setExerciseWeight(pd,exId,val){try{await window.storage.set('exw:
 async function renderWorkoutBody(){
   const body=document.getElementById('workoutBody');
   const prog=PROGRAM[selectedProgDay];
-  const isToday=selectedProgDay===WEEKDAY_MAP[new Date().getDay()];
+  const isToday = state.date === todayKey();
+  const selectedDate = new Date(state.date + 'T00:00:00');
+const todayDate = new Date(todayKey() + 'T00:00:00');
+const isFuture = selectedDate > todayDate;
 
   if(prog.rest){
     body.innerHTML=`<div class="rest-card">İstirahət günü 🌿<br><span style="font-size:12.5px;">Yüngül gəzinti və ya dartınma ilə aktiv bərpa tövsiyə olunur.</span></div>`;
@@ -103,9 +106,9 @@ async function renderWorkoutBody(){
 
   if(prog.cardio) html+=`<div class="note-card">🏃 ${prog.cardio}</div>`;
 
-  const doneToday=isToday&&state.log.mesq;
-  html+=`<button class="complete-btn ${doneToday?'done':''}" id="completeBtn" ${!isToday?'disabled':''}>
-    ${doneToday?'✓ Bugünkü məşq tamamlandı':(isToday?'Bugünkü məşqi tamamladım':'Yalnız bugünkü məşq işarələnə bilər')}
+  const doneToday=state.log.mesq;
+  html+=`<button class="complete-btn ${doneToday?'done':''}" id="completeBtn" ${!isFuture?'disabled':''}>
+    ${doneToday?'✓ Məşq tamamlandı':(isFuture?'Gələcək gün':'Məşqi tamamladım')}
   </button>`;
 
   body.innerHTML=html;
