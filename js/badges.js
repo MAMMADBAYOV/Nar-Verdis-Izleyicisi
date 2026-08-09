@@ -1,12 +1,5 @@
 /* ============ Badges / Level ============ */
 
-const BADGES=[
-  {id:'first',label:'🌱 İlk addım',need:s=>s.sessions>=1},
-  {id:'week',label:'🔥 7 gün ardıcıl',need:s=>s.streak>=7},
-  {id:'month',label:'🍎 1 ay tamamlandı',need:s=>s.sessions>=16},
-  {id:'full',label:'🍇 2 ay tamamlandı',need:s=>s.sessions>=32}
-];
-
 function levelFor(sessions){
 
   if(sessions>=25) return 'Peşəkar';

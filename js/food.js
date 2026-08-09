@@ -1,24 +1,5 @@
 /* ============ Food / Nutrition ============ */
 
-const CARB_INFO={
-  'Düyü':{loss:150,maintain:200,gain:300},
-  'Bulqur':{loss:150,maintain:200,gain:300},
-  'Qreçka':{loss:150,maintain:200,gain:300},
-  'Makaron':{loss:150,maintain:200,gain:300}
-};
-
-const PROTEIN_G={
-  loss:150,
-  maintain:180,
-  gain:220
-};
-
-const GOAL_LABEL={
-  loss:'Çəki salma',
-  maintain:'Çəki saxlama',
-  gain:'Çəki artırma'
-};
-
 function foodDayInfo(pd){
   const prog=PROGRAM[pd];
 
