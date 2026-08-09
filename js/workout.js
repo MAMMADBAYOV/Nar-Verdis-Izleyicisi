@@ -45,6 +45,7 @@ async function renderWorkoutBody(){
   const selectedDate = new Date(state.date + 'T00:00:00');
 const todayDate = new Date(todayKey() + 'T00:00:00');
 const isFuture = selectedDate > todayDate;
+console.log('DEBUG DATE:', state.date, todayKey(), isToday, isFuture);
 
   if(prog.rest){
     body.innerHTML=`<div class="rest-card">İstirahət günü 🌿<br><span style="font-size:12.5px;">Yüngül gəzinti və ya dartınma ilə aktiv bərpa tövsiyə olunur.</span></div>`;
@@ -107,7 +108,7 @@ const isFuture = selectedDate > todayDate;
   if(prog.cardio) html+=`<div class="note-card">🏃 ${prog.cardio}</div>`;
 
   const doneToday=state.log.mesq;
-  html+=`<button class="complete-btn ${doneToday?'done':''}" id="completeBtn" ${!isFuture?'disabled':''}>
+  html+=`<button class="complete-btn ${doneToday?'done':''}" id="completeBtn" ${isFuture?'disabled':''}>
     ${doneToday?'✓ Məşq tamamlandı':(isFuture?'Gələcək gün':'Məşqi tamamladım')}
   </button>`;
 
