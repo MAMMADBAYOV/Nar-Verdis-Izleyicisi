@@ -45,6 +45,14 @@ async function renderWorkoutBody(){
   const selectedDate = new Date(state.date + 'T00:00:00');
 const todayDate = new Date(todayKey() + 'T00:00:00');
 const isFuture = selectedDate > todayDate;
+console.log('DATE TEST:', {
+  stateDate: state.date,
+  today: todayKey(),
+  isToday: isToday,
+  selectedDate: selectedDate.toString(),
+  todayDate: todayDate.toString(),
+  isFuture: isFuture
+});
 console.log('DEBUG DATE:', state.date, todayKey(), isToday, isFuture);
 
   if(prog.rest){
@@ -108,9 +116,9 @@ console.log('DEBUG DATE:', state.date, todayKey(), isToday, isFuture);
   if(prog.cardio) html+=`<div class="note-card">🏃 ${prog.cardio}</div>`;
 
   const doneToday=state.log.mesq;
-  html+=`<button class="complete-btn ${doneToday?'done':''}" id="completeBtn" ${isFuture?'disabled':''}>
+html+=`<button class="complete-btn ${doneToday?'done':''}" id="completeBtn" ${isFuture?'disabled':''} onclick="toggleWorkoutComplete()">
     ${doneToday?'✓ Məşq tamamlandı':(isFuture?'Gələcək gün':'Məşqi tamamladım')}
-  </button>`;
+</button>`;
 
   body.innerHTML=html;
 
@@ -120,9 +128,7 @@ console.log('DEBUG DATE:', state.date, todayKey(), isToday, isFuture);
   document.querySelectorAll('.ex-weight input').forEach(inp=>{
     inp.onchange=()=>{setExerciseWeight(selectedProgDay,inp.dataset.exid,inp.value);};
   });
-  if(isToday){
-    document.getElementById('completeBtn').onclick=toggleWorkoutComplete;
-  }
+  
 }
 async function renderWorkoutProgress(){
   let count=0;
@@ -136,9 +142,27 @@ async function renderWorkoutProgress(){
   window._sessionCount=count;
 }
 async function toggleWorkoutComplete(){
-  const key='workout-log:'+todayKey();let exists=false;
-  try{const r=await window.storage.get(key,false);exists=!!(r&&r.value);}catch(e){}
-  if(exists){try{await window.storage.delete(key,false);}catch(e){}state.log.mesq=false;}
-  else{try{await window.storage.set(key,'true',false);}catch(e){}state.log.mesq=true;}
-  await saveToday();await renderWorkoutProgress();renderWorkoutBody();renderBadgesLevel();
+  console.log('BUTTON CLICK IS WORKING');
+  const key='workout-log:'+state.date;
+  let exists=false;
+
+  try{
+    const r=await window.storage.get(key,false);
+    exists=!!(r&&r.value);
+  }catch(e){}
+
+  if(exists){
+    try{
+      await window.storage.delete(key,false);
+    }catch(e){}
+    state.log.mesq=false;
+  }else{
+    try{
+      await window.storage.set(key,'true',false);
+    }catch(e){}
+    state.log.mesq=true;
+  }
+
+  renderWorkoutBody();
+  renderBadgesLevel();
 }
