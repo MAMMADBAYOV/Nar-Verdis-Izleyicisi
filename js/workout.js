@@ -29,7 +29,11 @@ function renderDayPicker(){
     pill.className='day-pill'+(prog.rest?' rest':' workout')+(pd===selectedProgDay?' selected':'');
     const tag=prog.rest?'İstirahət':(prog.title.split(' ')[0]);
     pill.innerHTML=`<div class="dp-name">${DAY_SHORT[jsDay]}</div><div class="dp-tag">${tag}</div>`;
-    pill.onclick=()=>{selectedProgDay=pd;renderDayPicker();renderWorkoutBody();};
+    pill.onclick=async()=>{
+  selectedProgDay=pd;
+  renderDayPicker();
+  await renderWorkoutBody();
+};
     picker.appendChild(pill);
   }
 }
@@ -115,8 +119,23 @@ console.log('DEBUG DATE:', state.date, todayKey(), isToday, isFuture);
 
   if(prog.cardio) html+=`<div class="note-card">🏃 ${prog.cardio}</div>`;
 
-  const doneToday=state.log.mesq;
-html+=`<button class="complete-btn ${doneToday?'done':''}" id="completeBtn" ${isFuture?'disabled':''} onclick="toggleWorkoutComplete()">
+  const workoutKey='workout-log:'+state.date;
+let doneToday=false;
+
+try{
+  const r=await window.storage.get(workoutKey,false);
+  doneToday = r?.value === 'true';
+}catch(e){
+  doneToday=false;
+}
+
+console.log('DONE STATUS:', {
+  date: state.date,
+  key: workoutKey,
+  doneToday: doneToday
+});   
+
+html+=`<button class="complete-btn ${doneToday?'done':''}" id="completeBtn" ${(doneToday || isFuture)?'disabled':''} onclick="toggleWorkoutComplete()">
     ${doneToday?'✓ Məşq tamamlandı':(isFuture?'Gələcək gün':'Məşqi tamamladım')}
 </button>`;
 
@@ -142,27 +161,24 @@ async function renderWorkoutProgress(){
   window._sessionCount=count;
 }
 async function toggleWorkoutComplete(){
-  console.log('BUTTON CLICK IS WORKING');
   const key='workout-log:'+state.date;
-  let exists=false;
 
   try{
     const r=await window.storage.get(key,false);
-    exists=!!(r&&r.value);
-  }catch(e){}
 
-  if(exists){
-    try{
-      await window.storage.delete(key,false);
-    }catch(e){}
-    state.log.mesq=false;
-  }else{
-    try{
-      await window.storage.set(key,'true',false);
-    }catch(e){}
-    state.log.mesq=true;
+    // Artıq tamamlanıbsa, heç nə etmə
+    if(r && r.value){
+      return;
+    }
+
+    // İlk klikdə tamamla
+    await window.storage.set(key,'true',false);
+
+    renderWorkoutBody();
+    await renderWorkoutProgress();
+    renderBadgesLevel();
+
+  }catch(e){
+    console.log('Workout completion error:',e);
   }
-
-  renderWorkoutBody();
-  renderBadgesLevel();
 }
