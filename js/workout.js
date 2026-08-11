@@ -162,19 +162,24 @@ async function renderWorkoutProgress(){
 }
 async function toggleWorkoutComplete(){
   const key='workout-log:'+state.date;
+  let exists=false;
 
   try{
     const r=await window.storage.get(key,false);
+    exists=!!(r&&r.value);
+  }catch(e){
+    // Key yoxdursa, bu gün məşq tamamlanmayıb deməkdir
+    exists=false;
+  }
 
-    // Artıq tamamlanıbsa, heç nə etmə
-    if(r && r.value){
-      return;
-    }
+  if(exists){
+    return;
+  }
 
-    // İlk klikdə tamamla
+  try{
     await window.storage.set(key,'true',false);
 
-    renderWorkoutBody();
+    await renderWorkoutBody();
     await renderWorkoutProgress();
     renderBadgesLevel();
 
