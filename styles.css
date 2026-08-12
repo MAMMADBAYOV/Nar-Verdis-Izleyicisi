@@ -29,3 +29,42 @@ header{display:flex;align-items:center;justify-content:space-between;margin-bott
 .habit.done{border-color:rgba(212,162,76,0.4);background:var(--card-hi);}
 .h-left{display:flex;align-items:center;gap:11px;}
 .h-dot{width:9px;height:9px;border-radius:50%;background:var(--text-faint);flex-shrink:0;}
+
+/* ===== Workout weekly date navigation ===== */
+
+.workout-date-picker{
+  width:100%;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin-bottom:12px;
+}
+
+.week-arrow{
+  width:36px;
+  height:58px;
+  border:0;
+  border-radius:12px;
+  background:#f1f3f5;
+  color:#222;
+  font-size:28px;
+  font-weight:700;
+  cursor:pointer;
+  flex-shrink:0;
+}
+
+.week-arrow:active{
+  transform:scale(.95);
+}
+
+.workout-date-list{
+  flex:1;
+  display:grid;
+  grid-template-columns:repeat(7,1fr);
+  gap:6px;
+}
+
+.workout-date-list .day-pill{
+  min-width:0;
+}
+
