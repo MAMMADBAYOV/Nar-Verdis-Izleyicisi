@@ -21,105 +21,72 @@ function stickFigureSVG(pose,eng){
     <line x1="50" y1="60" x2="38" y2="88"/><line x1="50" y1="60" x2="62" y2="88"/>
   </g></g></svg>`;
 }
+
 function renderDayPicker(){
   const picker=document.getElementById('dayPicker');
   picker.innerHTML='';
 
-  const wrap=document.createElement('div');
-  wrap.className='workout-date-picker';
+  const selected=new Date(state.date+'T00:00:00');
 
-  const prev=document.createElement('button');
-  prev.className='week-arrow';
-  prev.textContent='‹';
-  prev.title='Əvvəlki 7 gün';
+  const box=document.createElement('div');
+  box.className='workout-date-box';
 
-  const next=document.createElement('button');
-  next.className='week-arrow';
-  next.textContent='›';
-  next.title='Növbəti 7 gün';
+  const title=document.createElement('div');
+  title.className='workout-date-title';
+  title.textContent='Məşq günü';
 
-  const dates=document.createElement('div');
-  dates.className='workout-date-list';
+  const dateBtn=document.createElement('button');
+  dateBtn.className='workout-date-button';
 
-  const base=new Date();
-  base.setHours(0,0,0,0);
+  const dayNames=[
+    'Bazar','Bazar ertəsi','Çərşənbə axşamı',
+    'Çərşənbə','Cümə axşamı','Cümə','Şənbə'
+  ];
 
-  // Hər səhifədə 7 gün göstərilir.
-  // İlk səhifə bugündən 3 gün əvvəl başlayır.
-  base.setDate(base.getDate()-3+(workoutWeekOffset*7));
+  const monthNames=[
+    'Yanvar','Fevral','Mart','Aprel','May','İyun',
+    'İyul','Avqust','Sentyabr','Oktyabr','Noyabr','Dekabr'
+  ];
 
-  function localDateKey(d){
-    const y=d.getFullYear();
-    const m=String(d.getMonth()+1).padStart(2,'0');
-    const day=String(d.getDate()).padStart(2,'0');
-    return `${y}-${m}-${day}`;
-  }
+  const dayName=dayNames[selected.getDay()];
+  const day=selected.getDate();
+  const month=monthNames[selected.getMonth()];
+  const year=selected.getFullYear();
 
-  for(let i=0;i<7;i++){
-    const d=new Date(base);
-    d.setDate(base.getDate()+i);
+  dateBtn.innerHTML=`
+  <span class="date-calendar-icon">📅</span>
+  <span class="workout-date-value">${String(day).padStart(2,'0')}.${String(selected.getMonth()+1).padStart(2,'0')}.${year}</span>
+  <span class="date-chevron">⌄</span>
+`;
 
-    const key=localDateKey(d);
-    const jsDay=d.getDay();
-    const pd=WEEKDAY_MAP[jsDay];
-    const prog=PROGRAM[pd];
-
-    const pill=document.createElement('div');
-
-    let cls='day-pill '+(prog.rest?'rest':'workout');
-
-    if(key===state.date){
-      cls+=' selected';
-    }
-
-    if(key===todayKey()){
-      cls+=' today';
-    }
-
-    pill.className=cls;
-
-    const dayName=DAY_SHORT[jsDay];
-    const dayNumber=d.getDate();
-
-    const month=d.toLocaleDateString('az-AZ',{
-      month:'short'
-    }).replace('.','');
-
-    const isFuture=d>new Date(new Date().setHours(23,59,59,999));
-
-    pill.innerHTML=`
-      <div class="dp-name">${dayName}</div>
-      <div class="dp-date">${dayNumber}</div>
-      <div class="dp-month">${month}</div>
-      <div class="dp-tag">${prog.rest?'İstirahət':(isFuture?'Gələcək':prog.title.split(' ')[0])}</div>
-    `;
-
-    pill.onclick=async()=>{
-      state.date=key;
-      selectedProgDay=pd;
-
-      renderDayPicker();
-      await renderWorkoutBody();
-    };
-
-    dates.appendChild(pill);
-  }
-
-  prev.onclick=()=>{
-    workoutWeekOffset--;
-    renderDayPicker();
+  dateBtn.onclick=()=>{
+    dateInput.showPicker
+      ? dateInput.showPicker()
+      : dateInput.click();
   };
 
-  next.onclick=()=>{
-    workoutWeekOffset++;
+  const dateInput=document.createElement('input');
+  dateInput.type='date';
+  dateInput.value=state.date;
+  dateInput.className='hidden-workout-date';
+
+  dateInput.onchange=async()=>{
+    if(!dateInput.value) return;
+
+    state.date=dateInput.value;
+
+    const d=new Date(state.date+'T00:00:00');
+    selectedProgDay=WEEKDAY_MAP[d.getDay()];
+
     renderDayPicker();
+    await renderWorkoutBody();
   };
 
-  wrap.appendChild(prev);
-  wrap.appendChild(dates);
-  wrap.appendChild(next);
+  box.appendChild(title);
+  box.appendChild(dateBtn);
+  box.appendChild(dateInput);
 
-  picker.appendChild(wrap);
+  picker.appendChild(box);
 }
 async function getExerciseWeight(pd,exId){
   try{const r=await window.storage.get('exw:'+pd+':'+exId,false);return r&&r.value?r.value:'';}catch(e){return '';}
