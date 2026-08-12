@@ -2,6 +2,7 @@
 
 let selectedProgDay=WEEKDAY_MAP[new Date().getDay()];
 let day5Variant='standard';
+let workoutWeekOffset=0;
 
 async function loadDay5Variant(){
   try{const r=await window.storage.get('day5variant',false);if(r&&r.value)day5Variant=r.value;}catch(e){}
@@ -21,21 +22,104 @@ function stickFigureSVG(pose,eng){
   </g></g></svg>`;
 }
 function renderDayPicker(){
-  const picker=document.getElementById('dayPicker');picker.innerHTML='';
-  for(let pd=1;pd<=7;pd++){
-    const jsDay=PROGRAM_DAY_TO_JS[pd];
-    const prog=PROGRAM[pd];
-    const pill=document.createElement('div');
-    pill.className='day-pill'+(prog.rest?' rest':' workout')+(pd===selectedProgDay?' selected':'');
-    const tag=prog.rest?'İstirahət':(prog.title.split(' ')[0]);
-    pill.innerHTML=`<div class="dp-name">${DAY_SHORT[jsDay]}</div><div class="dp-tag">${tag}</div>`;
-    pill.onclick=async()=>{
-  selectedProgDay=pd;
-  renderDayPicker();
-  await renderWorkoutBody();
-};
-    picker.appendChild(pill);
+  const picker=document.getElementById('dayPicker');
+  picker.innerHTML='';
+
+  const wrap=document.createElement('div');
+  wrap.className='workout-date-picker';
+
+  const prev=document.createElement('button');
+  prev.className='week-arrow';
+  prev.textContent='‹';
+  prev.title='Əvvəlki 7 gün';
+
+  const next=document.createElement('button');
+  next.className='week-arrow';
+  next.textContent='›';
+  next.title='Növbəti 7 gün';
+
+  const dates=document.createElement('div');
+  dates.className='workout-date-list';
+
+  const base=new Date();
+  base.setHours(0,0,0,0);
+
+  // Hər səhifədə 7 gün göstərilir.
+  // İlk səhifə bugündən 3 gün əvvəl başlayır.
+  base.setDate(base.getDate()-3+(workoutWeekOffset*7));
+
+  function localDateKey(d){
+    const y=d.getFullYear();
+    const m=String(d.getMonth()+1).padStart(2,'0');
+    const day=String(d.getDate()).padStart(2,'0');
+    return `${y}-${m}-${day}`;
   }
+
+  for(let i=0;i<7;i++){
+    const d=new Date(base);
+    d.setDate(base.getDate()+i);
+
+    const key=localDateKey(d);
+    const jsDay=d.getDay();
+    const pd=WEEKDAY_MAP[jsDay];
+    const prog=PROGRAM[pd];
+
+    const pill=document.createElement('div');
+
+    let cls='day-pill '+(prog.rest?'rest':'workout');
+
+    if(key===state.date){
+      cls+=' selected';
+    }
+
+    if(key===todayKey()){
+      cls+=' today';
+    }
+
+    pill.className=cls;
+
+    const dayName=DAY_SHORT[jsDay];
+    const dayNumber=d.getDate();
+
+    const month=d.toLocaleDateString('az-AZ',{
+      month:'short'
+    }).replace('.','');
+
+    const isFuture=d>new Date(new Date().setHours(23,59,59,999));
+
+    pill.innerHTML=`
+      <div class="dp-name">${dayName}</div>
+      <div class="dp-date">${dayNumber}</div>
+      <div class="dp-month">${month}</div>
+      <div class="dp-tag">${prog.rest?'İstirahət':(isFuture?'Gələcək':prog.title.split(' ')[0])}</div>
+    `;
+
+    pill.onclick=async()=>{
+      state.date=key;
+      selectedProgDay=pd;
+
+      renderDayPicker();
+      await renderWorkoutBody();
+    };
+
+    dates.appendChild(pill);
+  }
+
+  prev.onclick=()=>{
+    workoutWeekOffset--;
+    renderDayPicker();
+  };
+
+  next.onclick=()=>{
+    workoutWeekOffset++;
+    renderDayPicker();
+  };
+
+  wrap.appendChild(prev);
+  wrap.appendChild(dates);
+  wrap.appendChild(next);
+
+  picker.appendChild(wrap);
 }
 async function getExerciseWeight(pd,exId){
   try{const r=await window.storage.get('exw:'+pd+':'+exId,false);return r&&r.value?r.value:'';}catch(e){return '';}
