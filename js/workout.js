@@ -66,9 +66,11 @@ function renderDayPicker(){
   };
 
   const dateInput=document.createElement('input');
-  dateInput.type='date';
-  dateInput.value=state.date;
-  dateInput.className='hidden-workout-date';
+dateInput.type='date';
+dateInput.value=state.date;
+dateInput.className='hidden-workout-date';
+dateInput.setAttribute('aria-hidden','true');
+dateInput.tabIndex=-1;
 
   dateInput.onchange=async()=>{
     if(!dateInput.value) return;
@@ -83,8 +85,13 @@ function renderDayPicker(){
   };
 
   box.appendChild(title);
-  box.appendChild(dateBtn);
-  box.appendChild(dateInput);
+box.appendChild(dateBtn);
+
+/* Native date input DOM-da qalır,
+   amma istifadəçiyə görünmür. */
+document.body.appendChild(dateInput);
+
+picker.appendChild(box);
 
   picker.appendChild(box);
 }
