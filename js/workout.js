@@ -59,6 +59,19 @@ function renderDayPicker(){
   <span class="date-chevron">⌄</span>
 `;
 
+  dateBtn.onclick=()=>{
+    dateInput.showPicker
+      ? dateInput.showPicker()
+      : dateInput.click();
+  };
+
+  const dateInput=document.createElement('input');
+dateInput.type='date';
+dateInput.value=state.date;
+dateInput.className='hidden-workout-date';
+dateInput.setAttribute('aria-hidden','true');
+dateInput.tabIndex=-1;
+
   dateInput.onchange=async()=>{
     if(!dateInput.value) return;
 
@@ -71,86 +84,19 @@ function renderDayPicker(){
     await renderWorkoutBody();
   };
 
-dateBtn.onclick=()=>{
-  const current=new Date(state.date+'T00:00:00');
-
-  const overlay=document.createElement('div');
-  overlay.className='workout-date-modal';
-
-  const modal=document.createElement('div');
-  modal.className='workout-date-modal-box';
-
-  const header=document.createElement('div');
-  header.className='workout-date-modal-header';
-
-  const close=document.createElement('button');
-  close.className='workout-date-modal-close';
-  close.textContent='×';
-
-  const heading=document.createElement('div');
-  heading.className='workout-date-modal-heading';
-  heading.textContent='Məşq günü';
-
-  header.appendChild(heading);
-  header.appendChild(close);
-
-  const input=document.createElement('input');
-  input.type='date';
-  input.value=state.date;
-  input.className='workout-date-modal-input';
-
-  const cancel=document.createElement('button');
-  cancel.className='workout-date-modal-cancel';
-  cancel.textContent='Ləğv et';
-
-  modal.appendChild(header);
-  modal.appendChild(input);
-  modal.appendChild(cancel);
-
-  overlay.appendChild(modal);
-  document.body.appendChild(overlay);
-
-  const closeModal=()=>{
-    overlay.remove();
-  };
-
-  close.onclick=closeModal;
-  cancel.onclick=closeModal;
-
-  overlay.onclick=(e)=>{
-    if(e.target===overlay){
-      closeModal();
-    }
-  };
-
-  input.onchange=async()=>{
-    if(!input.value) return;
-
-    state.date=input.value;
-
-    const d=new Date(state.date+'T00:00:00');
-    selectedProgDay=WEEKDAY_MAP[d.getDay()];
-
-    closeModal();
-
-    renderDayPicker();
-    await renderWorkoutBody();
-  };
-
-  setTimeout(()=>{
-    if(input.showPicker){
-      input.showPicker();
-    }else{
-      input.focus();
-    }
-  },50);
-};
-box.appendChild(title);
+  box.appendChild(title);
 box.appendChild(dateBtn);
+
+/* Native date input DOM-da qalır,
+   amma istifadəçiyə görünmür. */
+document.body.appendChild(dateInput);
+
 picker.appendChild(box);
+
+  picker.appendChild(box);
 }
 async function getExerciseWeight(pd,exId){
-try{const r=await window.storage.get('exw:'+pd+':'+exId,false);return r&&r.value?r.value:'';}catch(e){return '';}
+  try{const r=await window.storage.get('exw:'+pd+':'+exId,false);return r&&r.value?r.value:'';}catch(e){return '';}
 }
 async function setExerciseWeight(pd,exId,val){try{await window.storage.set('exw:'+pd+':'+exId,val,false);}catch(e){}}
 
