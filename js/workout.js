@@ -27,7 +27,6 @@ function renderDayPicker(){
   picker.innerHTML='';
 
   const selected=new Date(state.date+'T00:00:00');
-  selectedProgDay=WEEKDAY_MAP[selected.getDay()];
 
   const box=document.createElement('div');
   box.className='workout-date-box';
@@ -38,107 +37,223 @@ function renderDayPicker(){
 
   const dateBtn=document.createElement('button');
   dateBtn.className='workout-date-button';
+  dateBtn.type='button';
 
   const dayNames=[
-    'Bazar','Bazar ertəsi','Çərşənbə axşamı',
-    'Çərşənbə','Cümə axşamı','Cümə','Şənbə'
+    'Bazar',
+    'Bazar ertəsi',
+    'Çərşənbə axşamı',
+    'Çərşənbə',
+    'Cümə axşamı',
+    'Cümə',
+    'Şənbə'
   ];
 
   const monthNames=[
-    'Yanvar','Fevral','Mart','Aprel','May','İyun',
-    'İyul','Avqust','Sentyabr','Oktyabr','Noyabr','Dekabr'
+    'Yanvar',
+    'Fevral',
+    'Mart',
+    'Aprel',
+    'May',
+    'İyun',
+    'İyul',
+    'Avqust',
+    'Sentyabr',
+    'Oktyabr',
+    'Noyabr',
+    'Dekabr'
   ];
 
   const dayName=dayNames[selected.getDay()];
-  const day=selected.getDate();
-  const month=monthNames[selected.getMonth()];
+  const day=String(selected.getDate()).padStart(2,'0');
+  const month=String(selected.getMonth()+1).padStart(2,'0');
   const year=selected.getFullYear();
 
   dateBtn.innerHTML=`
-  <span class="date-calendar-icon">📅</span>
-  <span class="workout-date-value">${String(day).padStart(2,'0')}.${String(selected.getMonth()+1).padStart(2,'0')}.${year}</span>
-  <span class="date-chevron">⌄</span>
-`;
+    <span class="date-calendar-icon">📅</span>
+    <span class="workout-date-value">${day}.${month}.${year}</span>
+    <span class="date-chevron">⌄</span>
+  `;
 
-dateBtn.onclick=()=>{
-  const overlay=document.createElement('div');
-  overlay.className='workout-date-modal';
+  dateBtn.onclick=()=>{
+    const overlay=document.createElement('div');
+    overlay.className='workout-date-modal';
 
-  const modal=document.createElement('div');
-  modal.className='workout-date-modal-box';
+    const modal=document.createElement('div');
+    modal.className='workout-date-modal-box';
 
-  const header=document.createElement('div');
-  header.className='workout-date-modal-header';
+    const header=document.createElement('div');
+    header.className='workout-date-modal-header';
 
-  const close=document.createElement('button');
-  close.className='workout-date-modal-close';
-  close.textContent='×';
+    const heading=document.createElement('div');
+    heading.className='workout-date-modal-heading';
+    heading.textContent='Məşq günü';
 
-  const heading=document.createElement('div');
-  heading.className='workout-date-modal-heading';
-  heading.textContent='Məşq günü';
+    const close=document.createElement('button');
+    close.className='workout-date-modal-close';
+    close.type='button';
+    close.textContent='×';
 
-  header.appendChild(heading);
-  header.appendChild(close);
+    header.appendChild(heading);
+    header.appendChild(close);
 
-  const input=document.createElement('input');
-  input.type='date';
-  input.value=state.date;
-  input.className='workout-date-modal-input';
+    const calendarHeader=document.createElement('div');
+    calendarHeader.className='workout-calendar-header';
 
-  const cancel=document.createElement('button');
-  cancel.className='workout-date-modal-cancel';
-  cancel.textContent='Ləğv et';
+    const prevBtn=document.createElement('button');
+    prevBtn.type='button';
+    prevBtn.className='workout-calendar-nav';
+    prevBtn.textContent='‹';
 
-  modal.appendChild(header);
-  modal.appendChild(input);
-  modal.appendChild(cancel);
+    const monthTitle=document.createElement('div');
+    monthTitle.className='workout-calendar-month';
 
-  overlay.appendChild(modal);
-  document.body.appendChild(overlay);
+    const nextBtn=document.createElement('button');
+    nextBtn.type='button';
+    nextBtn.className='workout-calendar-nav';
+    nextBtn.textContent='›';
 
-  const closeModal=()=>{
-    overlay.remove();
-  };
+    calendarHeader.appendChild(prevBtn);
+    calendarHeader.appendChild(monthTitle);
+    calendarHeader.appendChild(nextBtn);
 
-  close.onclick=closeModal;
-  cancel.onclick=closeModal;
+    const weekdays=document.createElement('div');
+    weekdays.className='workout-calendar-weekdays';
 
-  overlay.onclick=(e)=>{
-    if(e.target===overlay){
-      closeModal();
+    const weekdayNames=[
+      'B.e',
+      'Ç.a',
+      'Ç',
+      'C.a',
+      'C',
+      'Ş',
+      'B'
+    ];
+
+    weekdayNames.forEach(name=>{
+      const el=document.createElement('div');
+      el.textContent=name;
+      weekdays.appendChild(el);
+    });
+
+    const calendarGrid=document.createElement('div');
+    calendarGrid.className='workout-calendar-grid';
+
+    const cancel=document.createElement('button');
+    cancel.type='button';
+    cancel.className='workout-date-modal-cancel';
+    cancel.textContent='Ləğv et';
+
+    modal.appendChild(header);
+    modal.appendChild(calendarHeader);
+    modal.appendChild(weekdays);
+    modal.appendChild(calendarGrid);
+    modal.appendChild(cancel);
+
+    overlay.appendChild(modal);
+    document.body.appendChild(overlay);
+
+    let viewYear=selected.getFullYear();
+    let viewMonth=selected.getMonth();
+
+    const closeModal=()=>{
+      overlay.remove();
+    };
+
+    close.onclick=closeModal;
+    cancel.onclick=closeModal;
+
+    overlay.onclick=(e)=>{
+      if(e.target===overlay){
+        closeModal();
+      }
+    };
+
+    function drawCalendar(){
+      monthTitle.textContent=`${monthNames[viewMonth]} ${viewYear}`;
+      calendarGrid.innerHTML='';
+
+      const firstDay=new Date(viewYear,viewMonth,1).getDay();
+      const daysInMonth=new Date(viewYear,viewMonth+1,0).getDate();
+
+      /*
+       * JavaScript həftəni bazardan başladır.
+       * Bizim görünüş isə bazar ertəsindən başlayır.
+       */
+      const startOffset=(firstDay+6)%7;
+
+      for(let i=0;i<startOffset;i++){
+        const empty=document.createElement('div');
+        empty.className='workout-calendar-empty';
+        calendarGrid.appendChild(empty);
+      }
+
+      for(let dayNumber=1;dayNumber<=daysInMonth;dayNumber++){
+        const dayBtn=document.createElement('button');
+        dayBtn.type='button';
+        dayBtn.className='workout-calendar-day';
+        dayBtn.textContent=dayNumber;
+
+        const currentKey=
+          `${viewYear}-${String(viewMonth+1).padStart(2,'0')}-${String(dayNumber).padStart(2,'0')}`;
+
+        if(currentKey===state.date){
+          dayBtn.classList.add('selected');
+        }
+
+        const today=todayKey();
+
+        if(currentKey===today){
+          dayBtn.classList.add('today');
+        }
+
+        dayBtn.onclick=async()=>{
+          state.date=currentKey;
+
+          const d=new Date(state.date+'T00:00:00');
+          selectedProgDay=WEEKDAY_MAP[d.getDay()];
+
+          closeModal();
+
+          renderDayPicker();
+          await renderWorkoutBody();
+        };
+
+        calendarGrid.appendChild(dayBtn);
+      }
     }
+
+    prevBtn.onclick=()=>{
+      viewMonth--;
+
+      if(viewMonth<0){
+        viewMonth=11;
+        viewYear--;
+      }
+
+      drawCalendar();
+    };
+
+    nextBtn.onclick=()=>{
+      viewMonth++;
+
+      if(viewMonth>11){
+        viewMonth=0;
+        viewYear++;
+      }
+
+      drawCalendar();
+    };
+
+    drawCalendar();
   };
-
-  input.onchange=async()=>{
-    if(!input.value) return;
-
-    state.date=input.value;
-
-    const d=new Date(state.date+'T00:00:00');
-    selectedProgDay=WEEKDAY_MAP[d.getDay()];
-
-    closeModal();
-
-    renderDayPicker();
-    await renderWorkoutBody();
-  };
-
-  setTimeout(()=>{
-    if(input.showPicker){
-      input.showPicker();
-    }else{
-      input.focus();
-    }
-  },50);
-};
 
   box.appendChild(title);
-box.appendChild(dateBtn);
+  box.appendChild(dateBtn);
 
-
-picker.appendChild(box);
+  picker.appendChild(box);
 }
+
 async function getExerciseWeight(pd,exId){
   try{const r=await window.storage.get('exw:'+pd+':'+exId,false);return r&&r.value?r.value:'';}catch(e){return '';}
 }
