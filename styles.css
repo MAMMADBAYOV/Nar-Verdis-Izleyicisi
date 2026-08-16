@@ -376,3 +376,20 @@ input.hidden-workout-date,
   letter-spacing: 0.2px;
   color: #7FB069 !important;
 }
+.workout-calendar-day.completed {
+  background: #7FB069 !important;
+  background-color: #7FB069 !important;
+  color: #fff !important;
+  font-weight: 700 !important;
+}
+
+.workout-calendar-day.selected.completed,
+.workout-calendar-day.today.completed {
+  background: #7FB069 !important;
+  background-color: #7FB069 !important;
+  color: #fff !important;
+  font-weight: 700 !important;
+}
+
+
+

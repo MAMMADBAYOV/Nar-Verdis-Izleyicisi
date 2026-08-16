@@ -77,7 +77,7 @@ function renderDayPicker(){
 
   dateBtn.onclick=()=>{
     document.querySelectorAll('.workout-date-modal').forEach(el=>el.remove());
-    
+
     const overlay=document.createElement('div');
     overlay.className='workout-date-modal';
 
@@ -171,59 +171,91 @@ function renderDayPicker(){
       }
     };
 
-    function drawCalendar(){
-      monthTitle.textContent=`${monthNames[viewMonth]} ${viewYear}`;
-      calendarGrid.innerHTML='';
+async function drawCalendar(){
+  monthTitle.textContent = `${monthNames[viewMonth]} ${viewYear}`;
+  calendarGrid.innerHTML = '';
 
-      const firstDay=new Date(viewYear,viewMonth,1).getDay();
-      const daysInMonth=new Date(viewYear,viewMonth+1,0).getDate();
+  const firstDay = new Date(viewYear, viewMonth, 1).getDay();
+  const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
 
-      /*
-       * JavaScript həftəni bazardan başladır.
-       * Bizim görünüş isə bazar ertəsindən başlayır.
-       */
-      const startOffset=(firstDay+6)%7;
+  /*
+   * JavaScript həftəni bazardan başladır.
+   * Bizim görünüş isə bazar ertəsindən başlayır.
+   */
+  const startOffset = (firstDay + 6) % 7;
 
-      for(let i=0;i<startOffset;i++){
-        const empty=document.createElement('div');
-        empty.className='workout-calendar-empty';
-        calendarGrid.appendChild(empty);
-      }
+  // Boş xanalar
+  for(let i = 0; i < startOffset; i++){
+    const empty = document.createElement('div');
+    empty.className = 'workout-calendar-empty';
+    calendarGrid.appendChild(empty);
+  }
 
-      for(let dayNumber=1;dayNumber<=daysInMonth;dayNumber++){
-        const dayBtn=document.createElement('button');
-        dayBtn.type='button';
-        dayBtn.className='workout-calendar-day';
-        dayBtn.textContent=dayNumber;
+  // Günlər
+  for(let dayNumber = 1; dayNumber <= daysInMonth; dayNumber++){
 
-        const currentKey=
-          `${viewYear}-${String(viewMonth+1).padStart(2,'0')}-${String(dayNumber).padStart(2,'0')}`;
+    const dayBtn = document.createElement('button');
 
-        if(currentKey===state.date){
-          dayBtn.classList.add('selected');
-        }
+    dayBtn.type = 'button';
+    dayBtn.className = 'workout-calendar-day';
+    dayBtn.textContent = dayNumber;
 
-        const today=todayKey();
+    const currentKey =
+      `${viewYear}-${String(viewMonth + 1).padStart(2,'0')}-${String(dayNumber).padStart(2,'0')}`;
 
-        if(currentKey===today){
-          dayBtn.classList.add('today');
-        }
-
-        dayBtn.onclick=async()=>{
-          state.date=currentKey;
-
-          const d=new Date(state.date+'T00:00:00');
-          selectedProgDay=WEEKDAY_MAP[d.getDay()];
-
-          closeModal();
-
-          renderDayPicker();
-          await renderWorkoutBody();
-        };
-
-        calendarGrid.appendChild(dayBtn);
-      }
+    // Seçilmiş tarix
+    if(currentKey === state.date){
+      dayBtn.classList.add('selected');
     }
+
+    // Bugünkü tarix
+    const today = todayKey();
+
+    if(currentKey === today){
+      dayBtn.classList.add('today');
+    }
+
+    /*
+     * Məşqin tamamlanıb-tamamlanmadığını yoxlayırıq.
+     */
+    try {
+      const workoutLog = await window.storage.get(
+        'workout-log:' + currentKey,
+        false
+      );
+
+      if(workoutLog && workoutLog.value === 'true'){
+        dayBtn.classList.add('completed');
+      }
+    } catch(error) {
+      console.log(
+        'Calendar workout check error:',
+        currentKey,
+        error
+      );
+    }
+
+    // Tarix seçimi
+    dayBtn.onclick = async()=>{
+
+      state.date = currentKey;
+
+      const d = new Date(
+        state.date + 'T00:00:00'
+      );
+
+      selectedProgDay = WEEKDAY_MAP[d.getDay()];
+
+      closeModal();
+
+      renderDayPicker();
+
+      await renderWorkoutBody();
+    };
+
+    calendarGrid.appendChild(dayBtn);
+  }
+}
 
     prevBtn.onclick=()=>{
       viewMonth--;
