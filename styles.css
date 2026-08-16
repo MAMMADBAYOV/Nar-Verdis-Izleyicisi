@@ -352,7 +352,7 @@ input.hidden-workout-date,
 }
 
 .workout-calendar-day.selected {
-  background: #e66a2c;
+  background: #D85C32;
   color: #fff;
   font-weight: 700;
 }
@@ -367,4 +367,12 @@ input.hidden-workout-date,
   color: #fff;
   cursor: pointer;
   font-size: 14px;
+}
+
+.workout-date-value {
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 22px;
+  letter-spacing: 0.2px;
+  color: #7FB069 !important;
 }
