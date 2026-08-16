@@ -300,15 +300,6 @@ async function renderWorkoutBody(){
   const selectedDate = new Date(state.date + 'T00:00:00');
 const todayDate = new Date(todayKey() + 'T00:00:00');
 const isFuture = selectedDate > todayDate;
-console.log('DATE TEST:', {
-  stateDate: state.date,
-  today: todayKey(),
-  isToday: isToday,
-  selectedDate: selectedDate.toString(),
-  todayDate: todayDate.toString(),
-  isFuture: isFuture
-});
-console.log('DEBUG DATE:', state.date, todayKey(), isToday, isFuture);
 
   if(prog.rest){
     body.innerHTML=`<div class="rest-card">İstirahət günü 🌿<br><span style="font-size:12.5px;">Yüngül gəzinti və ya dartınma ilə aktiv bərpa tövsiyə olunur.</span></div>`;
@@ -379,12 +370,6 @@ try{
 }catch(e){
   doneToday=false;
 }
-
-console.log('DONE STATUS:', {
-  date: state.date,
-  key: workoutKey,
-  doneToday: doneToday
-});   
 
 html+=`<button class="complete-btn ${doneToday?'done':''}" id="completeBtn" ${(doneToday || isFuture)?'disabled':''} onclick="toggleWorkoutComplete()">
     ${doneToday?'✓ Məşq tamamlandı':(isFuture?'Gələcək gün':'Məşqi tamamladım')}
