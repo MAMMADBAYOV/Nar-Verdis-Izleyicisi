@@ -76,6 +76,8 @@ function renderDayPicker(){
   `;
 
   dateBtn.onclick=()=>{
+    document.querySelectorAll('.workout-date-modal').forEach(el=>el.remove());
+    
     const overlay=document.createElement('div');
     overlay.className='workout-date-modal';
 

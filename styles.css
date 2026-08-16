@@ -233,3 +233,138 @@ input.hidden-workout-date,
   appearance: none !important;
   -webkit-appearance: none !important;
 }
+.workout-date-modal {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+
+  width: 100vw !important;
+  height: 100vh !important;
+
+  margin: 0 !important;
+  padding: 20px !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  transform: none !important;
+  z-index: 2147483647 !important;
+
+  background: rgba(0, 0, 0, 0.55);
+}
+
+.workout-date-modal-box {
+  width: min(360px, 100%);
+  max-height: 90vh;
+  overflow-y: auto;
+  border-radius: 20px;
+  padding: 18px;
+  background: #1b1f24;
+  color: #fff;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+}
+
+.workout-date-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+
+.workout-date-modal-heading {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.workout-date-modal-close {
+  border: 0;
+  background: transparent;
+  color: #fff;
+  font-size: 28px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.workout-calendar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.workout-calendar-month {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.workout-calendar-nav {
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.08);
+  color: #fff;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.workout-calendar-weekdays,
+.workout-calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+}
+
+.workout-calendar-weekdays {
+  margin-bottom: 6px;
+}
+
+.workout-calendar-weekdays > div {
+  text-align: center;
+  font-size: 11px;
+  font-weight: 600;
+  opacity: 0.6;
+}
+
+.workout-calendar-day,
+.workout-calendar-empty {
+  aspect-ratio: 1;
+}
+
+.workout-calendar-day {
+  border: 0;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.06);
+  color: #fff;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.workout-calendar-day:hover {
+  background: rgba(255,255,255,0.14);
+}
+
+.workout-calendar-day.today {
+  outline: 2px solid rgba(255,255,255,0.35);
+}
+
+.workout-calendar-day.selected {
+  background: #e66a2c;
+  color: #fff;
+  font-weight: 700;
+}
+
+.workout-date-modal-cancel {
+  width: 100%;
+  margin-top: 16px;
+  padding: 11px;
+  border: 0;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.08);
+  color: #fff;
+  cursor: pointer;
+  font-size: 14px;
+}
