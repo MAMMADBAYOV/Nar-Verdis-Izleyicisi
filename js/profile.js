@@ -6,6 +6,7 @@ function openProfileModal(prefill){
   document.querySelectorAll('#genderRow .pill').forEach(p=>p.classList.toggle('on',p.dataset.val===selectedGender));
   document.querySelectorAll('#goalRow .pill').forEach(p=>p.classList.toggle('on',p.dataset.val===selectedGoal));
   document.getElementById('profileModal').classList.add('show');
+  if(typeof renderNotifUI==='function') renderNotifUI();
 }
 document.querySelectorAll('#genderRow .pill').forEach(p=>{p.onclick=()=>{selectedGender=p.dataset.val;document.querySelectorAll('#genderRow .pill').forEach(x=>x.classList.toggle('on',x===p));};});
 document.querySelectorAll('#goalRow .pill').forEach(p=>{p.onclick=()=>{selectedGoal=p.dataset.val;document.querySelectorAll('#goalRow .pill').forEach(x=>x.classList.toggle('on',x===p));};});

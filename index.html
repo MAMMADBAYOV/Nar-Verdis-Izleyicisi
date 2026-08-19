@@ -340,7 +340,20 @@ footer{margin-top:32px;font-size:11px;color:var(--text-faint);text-align:center;
       <div class="pill" data-val="gain">Çəki artırma</div>
     </div>
     <div class="modal-msg" id="profileMsg"></div>
+
+    <div class="notif-section">
+      <div class="notif-row">
+        <div>
+          <div class="notif-title">🔔 Bildirişlər</div>
+          <div class="notif-status" id="notifStatus">Bildirişlər hələ aktiv deyil.</div>
+        </div>
+        <button class="btn-primary notif-enable-btn" id="enableNotifBtn" type="button">Aktivləşdir</button>
+      </div>
+    </div>
+
     <div class="modal-actions"><button class="btn-primary" id="saveProfileBtn">Davam et</button></div>
+   
+
   </div>
 </div>
 
@@ -401,7 +414,9 @@ footer{margin-top:32px;font-size:11px;color:var(--text-faint);text-align:center;
 <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-messaging-compat.js"></script>
 <script src="js/firebase-auth.js"></script>
+<script src="js/notifications.js"></script>
 <script src="js/config.js"></script>
 <script src="js/images.js"></script>
 <script src="js/utils.js"></script>

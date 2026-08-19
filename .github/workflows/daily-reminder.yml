@@ -1,0 +1,29 @@
+name: Günlük bildiriş yoxlaması
+
+on:
+  schedule:
+   # 15:00 UTC = 19:00 Bakı vaxtı (Azərbaycan UTC+4, yay/qış saatı dəyişmir)
+       - cron: '0 15 * * *'
+  workflow_dispatch: {}
+
+jobs:
+  send-reminders:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Kodu çıxart
+        uses: actions/checkout@v4
+
+      - name: Node.js quraşdır
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Paketləri yüklə
+        working-directory: scripts
+        run: npm install
+
+      - name: Bildirişləri göndər
+        working-directory: scripts
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        run: node send-reminders.js
