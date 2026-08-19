@@ -319,6 +319,23 @@ footer{margin-top:32px;font-size:11px;color:var(--text-faint);text-align:center;
 <footer>Məlumatlar bu cihazda saxlanılır və yalnız sənə görünür.</footer>
 </div>
 
+<div class="ai-fab" id="aiFab" title="AI köməkçi">🤖</div>
+
+<div class="modal-overlay" id="aiChatModal">
+  <div class="modal-card ai-chat-card">
+    <div class="ai-chat-tabs">
+      <div class="ai-chat-tab on" id="aiTabNutrition">🥗 Qidalanma</div>
+      <div class="ai-chat-tab" id="aiTabWorkout">💪 Məşq</div>
+    </div>
+    <div class="ai-chat-messages" id="aiChatMessages"></div>
+    <div class="ai-chat-input-row">
+      <input class="field-input" id="aiChatInput" type="text" placeholder="Sualını yaz...">
+      <button class="btn-primary ai-chat-send" id="aiChatSend" type="button">Göndər</button>
+    </div>
+    <div class="modal-actions"><button class="btn-primary" id="aiChatCloseBtn">Bağla</button></div>
+  </div>
+</div>
+
 <div class="modal-overlay" id="profileModal">
   <div class="modal-card">
     <div class="modal-title">Profilini tamamla</div>
@@ -417,6 +434,7 @@ footer{margin-top:32px;font-size:11px;color:var(--text-faint);text-align:center;
 <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-messaging-compat.js"></script>
 <script src="js/firebase-auth.js"></script>
 <script src="js/notifications.js"></script>
+<script src="js/ai-chat.js"></script>
 <script src="js/config.js"></script>
 <script src="js/images.js"></script>
 <script src="js/utils.js"></script>

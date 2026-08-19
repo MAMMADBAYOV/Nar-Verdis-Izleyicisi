@@ -15,6 +15,30 @@ header{display:flex;align-items:center;justify-content:space-between;margin-bott
 .notif-title{font-size:13.5px;font-weight:600;color:var(--text,#EAF0EA);}
 .notif-status{font-size:11.5px;color:var(--text-dim,#9AA69C);margin-top:2px;}
 .notif-enable-btn{width:auto;padding:8px 14px;font-size:12.5px;white-space:nowrap;}
+.ai-fab{
+  position:fixed;bottom:22px;right:18px;width:52px;height:52px;border-radius:50%;
+  background:linear-gradient(145deg,#D4A24C,#A8324A);display:flex;align-items:center;
+  justify-content:center;font-size:24px;cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,0.35);
+  z-index:500;
+}
+.ai-chat-card{display:flex;flex-direction:column;max-height:80vh;}
+.ai-chat-tabs{display:flex;gap:8px;margin-bottom:10px;}
+.ai-chat-tab{
+  flex:1;text-align:center;padding:9px;border-radius:12px;font-size:13px;cursor:pointer;
+  border:1px solid var(--line,#37453A);color:var(--text-dim,#9AA69C);
+}
+.ai-chat-tab.on{background:var(--gold,#D4A24C);color:#1b1f18;border-color:var(--gold,#D4A24C);font-weight:600;}
+.ai-chat-messages{
+  flex:1;overflow-y:auto;min-height:220px;max-height:42vh;display:flex;flex-direction:column;
+  gap:8px;margin-bottom:10px;padding:4px;
+}
+.ai-msg{max-width:85%;padding:9px 12px;border-radius:14px;font-size:13px;line-height:1.4;}
+.ai-msg.user{align-self:flex-end;background:var(--gold,#D4A24C);color:#1b1f18;}
+.ai-msg.bot{align-self:flex-start;background:rgba(255,255,255,0.06);color:var(--text,#EAF0EA);}
+.ai-msg.bot.loading{color:var(--text-dim,#9AA69C);font-style:italic;}
+.ai-chat-input-row{display:flex;gap:8px;}
+.ai-chat-input-row .field-input{flex:1;margin:0;}
+.ai-chat-send{width:auto;padding:10px 16px;}
 .icon-btn{width:32px;height:32px;border-radius:50%;background:var(--card);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;flex-shrink:0;}
 .streak{font-family:'Space Mono',monospace;font-size:12px;color:var(--gold);background:rgba(212,162,76,0.08);border:1px solid rgba(212,162,76,0.25);padding:5px 9px;border-radius:20px;white-space:nowrap;}
 .eyebrow{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:1.8px;text-transform:uppercase;color:var(--text-faint);margin-bottom:16px;}
