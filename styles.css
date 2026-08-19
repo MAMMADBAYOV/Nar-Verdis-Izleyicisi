@@ -1,0 +1,440 @@
+:root{--bg:#172019;--bg-deep:#10160F;--card:#212B23;--card-hi:#283427;--line:#37453A;--red:#A8324A;--red-soft:#6E2436;--gold:#D4A24C;--gold-dim:#8A6C34;--green:#4A7A4A;--text:#EFE6D8;--text-dim:#9AA69C;--text-faint:#5E6B60;}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;min-height:100vh;background:radial-gradient(ellipse 900px 500px at 50% -10%,#24312A 0%,transparent 60%),var(--bg);color:var(--text);font-family:'Manrope',sans-serif;-webkit-font-smoothing:antialiased;}
+.wrap{max-width:480px;margin:0 auto;padding:24px 18px 60px;}
+header{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;gap:8px;}
+.brand{font-family:'Fraunces',serif;font-weight:600;font-size:28px;}
+.brand span{color:var(--red);}
+.head-right{display:flex;align-items:center;gap:8px;}
+.auth-user-name{font-size:11.5px;color:var(--text-dim,#9AA69C);max-width:90px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.icon-btn{width:32px;height:32px;border-radius:50%;background:var(--card);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;flex-shrink:0;}
+.streak{font-family:'Space Mono',monospace;font-size:12px;color:var(--gold);background:rgba(212,162,76,0.08);border:1px solid rgba(212,162,76,0.25);padding:5px 9px;border-radius:20px;white-space:nowrap;}
+.eyebrow{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:1.8px;text-transform:uppercase;color:var(--text-faint);margin-bottom:16px;}
+.tabs{display:flex;gap:6px;margin-bottom:22px;}
+.tab-btn{flex:1;padding:9px 0;text-align:center;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:0.5px;text-transform:uppercase;background:var(--card);border:1px solid var(--line);border-radius:10px;color:var(--text-dim);cursor:pointer;}
+.tab-btn.active{background:var(--red-soft);border-color:var(--red);color:var(--text);}
+.view{display:none;}.view.active{display:block;}
+.nar-stage{display:flex;flex-direction:column;align-items:center;padding:14px 0 6px;}
+.nar-svg{width:150px;height:150px;filter:drop-shadow(0 12px 24px rgba(0,0,0,0.35));}
+.nar-svg.small{width:110px;height:110px;}
+.nar-caption{margin-top:12px;font-family:'Fraunces',serif;font-size:15.5px;color:var(--text-dim);text-align:center;}
+.nar-caption b{color:var(--text);font-weight:600;}
+.nar-caption.full{color:var(--gold);}
+.seed{transition:opacity 500ms ease,transform 500ms ease,fill 500ms ease;transform-origin:center;}
+.seed.off{opacity:0.14;transform:scale(0.82);}
+.seed.on{opacity:1;}
+.seed.burst{animation:burstPop 700ms ease;}
+@keyframes burstPop{0%{transform:scale(1);}40%{transform:scale(1.6);}100%{transform:scale(1);}}
+.nar-glow{transition:opacity 700ms ease;}
+.nar-body{transform-origin:center;}
+.nar-svg.full .nar-glow{animation:glowPulse 1.8s ease-in-out infinite;}
+.nar-svg.full .nar-body{animation:bodyBurst 900ms ease;}
+@keyframes glowPulse{0%,100%{opacity:0.55;}50%{opacity:0.9;}}
+@keyframes bodyBurst{0%{transform:scale(1);}35%{transform:scale(1.09);}60%{transform:scale(0.96);}100%{transform:scale(1);}}
+.list{margin-top:22px;display:flex;flex-direction:column;gap:9px;}
+.habit{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:13px 15px;display:flex;align-items:center;justify-content:space-between;}
+.habit.done{border-color:rgba(212,162,76,0.4);background:var(--card-hi);}
+.h-left{display:flex;align-items:center;gap:11px;}
+.h-dot{width:9px;height:9px;border-radius:50%;background:var(--text-faint);flex-shrink:0;}
+
+/* ===== Workout weekly date navigation ===== */
+
+.workout-date-picker{
+  width:100%;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin-bottom:12px;
+}
+
+.week-arrow{
+  width:36px;
+  height:58px;
+  border:0;
+  border-radius:12px;
+  background:#f1f3f5;
+  color:#222;
+  font-size:28px;
+  font-weight:700;
+  cursor:pointer;
+  flex-shrink:0;
+}
+
+.week-arrow:active{
+  transform:scale(.95);
+}
+
+.workout-date-list{
+  flex:1;
+  display:grid;
+  grid-template-columns:repeat(7,1fr);
+  gap:6px;
+}
+
+.workout-date-list .day-pill{
+  min-width:0;
+}
+
+/* ===== Workout date selector ===== */
+
+.workout-date-box{
+  width:100%;
+  box-sizing:border-box;
+  margin:10px 0 14px;
+}
+
+.workout-date-title{
+  font-size:14px;
+  font-weight:700;
+  margin-bottom:8px;
+}
+
+.workout-date-button{
+  width:100%;
+  min-height:68px;
+  box-sizing:border-box;
+
+  display:flex;
+  align-items:center;
+  gap:12px;
+
+  padding:12px 15px;
+
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:16px;
+
+  /* Appın tünd görünüşünə uyğun */
+  background:rgba(255,255,255,.06);
+
+  color:#fff;
+  box-shadow:0 4px 14px rgba(0,0,0,.18);
+
+  cursor:pointer;
+  text-align:left;
+
+  -webkit-tap-highlight-color:transparent;
+  transition:transform .15s ease, background .15s ease;
+}
+
+.workout-date-button:hover{
+  background:rgba(255,255,255,.09);
+}
+
+.workout-date-button:active{
+  transform:scale(.98);
+}
+
+.date-calendar-icon{
+  width:42px;
+  height:42px;
+  flex:0 0 42px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  border-radius:12px;
+
+  background:rgba(255,255,255,.10);
+
+  font-size:21px;
+}
+
+.workout-date-button > span:nth-child(2){
+  min-width:0;
+  flex:1;
+
+  display:flex;
+  align-items:center;
+}
+
+.workout-date-value{
+  font-size:18px;
+  font-weight:700;
+  line-height:22px;
+  letter-spacing:.2px;
+}
+
+.date-chevron{
+  flex:0 0 auto;
+
+  font-size:22px;
+  color:rgba(255,255,255,.65);
+  line-height:1;
+}
+
+/* Native date input görünməsin */
+.hidden-workout-date{
+  position:absolute;
+  width:1px;
+  height:1px;
+  opacity:0;
+  pointer-events:none;
+}
+
+/* ===== Mobile ===== */
+
+@media (max-width:600px){
+
+  .workout-date-box{
+    margin:8px 0 12px;
+  }
+
+  .workout-date-title{
+    font-size:14px;
+    margin-bottom:7px;
+  }
+
+  .workout-date-button{
+    min-height:70px;
+    padding:13px 14px;
+    border-radius:16px;
+  }
+
+  .date-calendar-icon{
+    width:42px;
+    height:42px;
+    flex-basis:42px;
+    font-size:22px;
+  }
+
+  .workout-date-value{
+    font-size:17px;
+  }
+}
+
+/* ===== Very small phones ===== */
+
+@media (max-width:370px){
+
+  .workout-date-button{
+    min-height:66px;
+    padding:11px 12px;
+  }
+
+  .date-calendar-icon{
+    width:38px;
+    height:38px;
+    flex-basis:38px;
+  }
+
+  .workout-date-value{
+    font-size:16px;
+  }
+}
+
+/* Native date input-u istifadəçidən tam gizlət */
+input.hidden-workout-date,
+.hidden-workout-date[type="date"] {
+  position: fixed !important;
+  left: -9999px !important;
+  top: -9999px !important;
+
+  width: 1px !important;
+  height: 1px !important;
+
+  opacity: 0 !important;
+  visibility: hidden !important;
+
+  pointer-events: none !important;
+  appearance: none !important;
+  -webkit-appearance: none !important;
+}
+.workout-date-modal {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+
+  width: 100vw !important;
+  height: 100vh !important;
+
+  margin: 0 !important;
+  padding: 20px !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  transform: none !important;
+  z-index: 2147483647 !important;
+
+  background: rgba(0, 0, 0, 0.55);
+}
+
+.workout-date-modal-box {
+  width: min(360px, 100%);
+  max-height: 90vh;
+  overflow-y: auto;
+  border-radius: 20px;
+  padding: 18px;
+  background: #1b1f24;
+  color: #fff;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+}
+
+.workout-date-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+
+.workout-date-modal-heading {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.workout-date-modal-close {
+  border: 0;
+  background: transparent;
+  color: #fff;
+  font-size: 28px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.workout-calendar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.workout-calendar-month {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.workout-calendar-nav {
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.08);
+  color: #fff;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.workout-calendar-weekdays,
+.workout-calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+}
+
+.workout-calendar-weekdays {
+  margin-bottom: 6px;
+}
+
+.workout-calendar-weekdays > div {
+  text-align: center;
+  font-size: 11px;
+  font-weight: 600;
+  opacity: 0.6;
+}
+
+.workout-calendar-day,
+.workout-calendar-empty {
+  aspect-ratio: 1;
+}
+
+.workout-calendar-day {
+  border: 0;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.06);
+  color: #fff;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.workout-calendar-day:hover {
+  background: rgba(255,255,255,0.14);
+}
+
+.workout-calendar-day.today {
+  outline: 2px solid rgba(255,255,255,0.35);
+}
+
+.workout-calendar-day.selected {
+  background: #D85C32;
+  color: #fff;
+  font-weight: 700;
+}
+
+.workout-date-modal-cancel {
+  width: 100%;
+  margin-top: 16px;
+  padding: 11px;
+  border: 0;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.08);
+  color: #fff;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.workout-date-value {
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 22px;
+  letter-spacing: 0.2px;
+  color: #7FB069 !important;
+}
+
+.workout-calendar-day.completed {
+  background: #7FB069 !important;
+  background-color: #7FB069 !important;
+  color: #fff !important;
+  border-color: #7FB069 !important;
+  font-weight: 700 !important;
+}
+/* ============ Auth gate ============ */
+body.auth-locked{overflow:hidden;}
+.auth-gate{
+  position:fixed;inset:0;z-index:200;
+  display:none;align-items:center;justify-content:center;
+  background:radial-gradient(ellipse 900px 500px at 50% -10%,#24312A 0%,transparent 60%),var(--bg,#172019);
+  padding:20px;
+}
+.auth-gate.show{display:flex;}
+.auth-gate-card{
+  max-width:340px;width:100%;
+  background:var(--card,#212B23);border:1px solid var(--line,#37453A);
+  border-radius:18px;padding:32px 26px;text-align:center;
+}
+.auth-gate-sub{
+  font-size:13.5px;color:var(--text-dim,#9AA69C);margin-bottom:24px;
+}
+.auth-google-btn{
+  width:100%;display:flex;align-items:center;justify-content:center;gap:10px;
+  padding:13px;border-radius:12px;border:1px solid var(--line,#37453A);
+  background:#fff;color:#1B2015;font-weight:700;font-size:14px;cursor:pointer;
+}
+.auth-google-btn:disabled{opacity:0.6;cursor:default;}
+.auth-gate-msg{
+  margin-top:12px;font-size:12px;color:var(--red,#A8324A);min-height:14px;
+}
+.auth-divider{
+  display:flex;align-items:center;gap:10px;margin:18px 0;
+  font-size:11.5px;color:var(--text-dim,#9AA69C);
+}
+.auth-divider::before,.auth-divider::after{
+  content:'';flex:1;height:1px;background:var(--line,#37453A);
+}
+.auth-email-form{display:flex;flex-direction:column;gap:10px;}
+.auth-input{
+  width:100%;padding:12px 13px;border-radius:12px;border:1px solid var(--line,#37453A);
+  background:rgba(255,255,255,0.03);color:var(--text,#EAF0EA);font-size:13.5px;
+  box-sizing:border-box;
+}
+.auth-input::placeholder{color:var(--text-dim,#9AA69C);}
+.auth-input:focus{outline:none;border-color:var(--gold,#D4A24C);}
+.auth-links{
+  display:flex;flex-direction:column;align-items:center;gap:6px;
+  margin-top:14px;font-size:12px;color:var(--text-dim,#9AA69C);
+}
+.auth-links a{color:var(--gold,#D4A24C);text-decoration:none;}
+.auth-links a:hover{text-decoration:underline;}

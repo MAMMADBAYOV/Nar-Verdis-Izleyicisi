@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nar</title>
+<link rel="stylesheet" href="styles.css">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#172019;--bg-deep:#10160F;--card:#212B23;--card-hi:#283427;--line:#37453A;--red:#A8324A;--red-soft:#6E2436;--gold:#D4A24C;--gold-dim:#8A6C34;--green:#4A7A4A;--text:#EFE6D8;--text-dim:#9AA69C;--text-faint:#5E6B60;}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;min-height:100vh;background:radial-gradient(ellipse 900px 500px at 50% -10%,#24312A 0%,transparent 60%),var(--bg);color:var(--text);font-family:'Manrope',sans-serif;-webkit-font-smoothing:antialiased;}
+.wrap{max-width:480px;margin:0 auto;padding:24px 18px 60px;}
+header{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;gap:8px;}
+.brand{font-family:'Fraunces',serif;font-weight:600;font-size:28px;}
+.brand span{color:var(--red);}
+.head-right{display:flex;align-items:center;gap:8px;}
+.icon-btn{width:32px;height:32px;border-radius:50%;background:var(--card);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;flex-shrink:0;}
+.streak{font-family:'Space Mono',monospace;font-size:12px;color:var(--gold);background:rgba(212,162,76,0.08);border:1px solid rgba(212,162,76,0.25);padding:5px 9px;border-radius:20px;white-space:nowrap;}
+.eyebrow{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:1.8px;text-transform:uppercase;color:var(--text-faint);margin-bottom:16px;}
+.tabs{display:flex;gap:6px;margin-bottom:22px;}
+.tab-btn{flex:1;padding:9px 0;text-align:center;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:0.5px;text-transform:uppercase;background:var(--card);border:1px solid var(--line);border-radius:10px;color:var(--text-dim);cursor:pointer;}
+.tab-btn.active{background:var(--red-soft);border-color:var(--red);color:var(--text);}
+.view{display:none;}.view.active{display:block;}
+.nar-stage{display:flex;flex-direction:column;align-items:center;padding:14px 0 6px;}
+.nar-svg{width:150px;height:150px;filter:drop-shadow(0 12px 24px rgba(0,0,0,0.35));}
+.nar-svg.small{width:110px;height:110px;}
+.nar-caption{margin-top:12px;font-family:'Fraunces',serif;font-size:15.5px;color:var(--text-dim);text-align:center;}
+.nar-caption b{color:var(--text);font-weight:600;}
+.nar-caption.full{color:var(--gold);}
+.seed{transition:opacity 500ms ease,transform 500ms ease,fill 500ms ease;transform-origin:center;}
+.seed.off{opacity:0.14;transform:scale(0.82);}
+.seed.on{opacity:1;}
+.seed.burst{animation:burstPop 700ms ease;}
+@keyframes burstPop{0%{transform:scale(1);}40%{transform:scale(1.6);}100%{transform:scale(1);}}
+.list{margin-top:22px;display:flex;flex-direction:column;gap:9px;}
+.habit{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:13px 15px;display:flex;align-items:center;justify-content:space-between;}
+.habit.done{border-color:rgba(212,162,76,0.4);background:var(--card-hi);}
+.h-left{display:flex;align-items:center;gap:11px;}
+.h-dot{width:9px;height:9px;border-radius:50%;background:var(--text-faint);flex-shrink:0;}
+.habit.done .h-dot{background:var(--gold);box-shadow:0 0 8px rgba(212,162,76,0.6);}
+.h-name{font-size:14.5px;font-weight:600;}
+.h-sub{font-family:'Space Mono',monospace;font-size:11.5px;color:var(--text-dim);margin-top:2px;}
+.h-right{display:flex;align-items:center;gap:8px;}
+.stepper{display:flex;align-items:center;gap:7px;}
+.stepper button{width:27px;height:27px;border-radius:8px;border:1px solid var(--line);background:var(--bg-deep);color:var(--text);font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.stepper .count{font-family:'Space Mono',monospace;font-size:13.5px;min-width:24px;text-align:center;}
+.toggle{width:38px;height:23px;border-radius:20px;background:var(--bg-deep);border:1px solid var(--line);cursor:pointer;position:relative;flex-shrink:0;}
+.toggle.on{background:var(--red-soft);border-color:var(--red);}
+.toggle .knob{position:absolute;top:2px;left:2px;width:17px;height:17px;border-radius:50%;background:var(--text-dim);transition:transform 200ms ease;}
+.toggle.on .knob{transform:translateX(15px);background:var(--gold);}
+.week{margin-top:26px;}
+.week-label,.section-label{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:1.3px;text-transform:uppercase;color:var(--text-faint);margin-bottom:10px;}
+.week-grid{display:flex;gap:7px;}
+.day{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;}
+.day .box{
+  width:40px;
+  height:40px;
+  aspect-ratio:auto;
+  border-radius:50%;
+  background:var(--card);
+  border:1px solid var(--line);
+  transition:
+    background .2s ease,
+    border-color .2s ease,
+    transform .2s ease,
+    box-shadow .2s ease;
+}
+
+.day .box.full{
+  background:#6FAE63;
+  border-color:#6FAE63;
+  box-shadow:0 0 0 3px rgba(111,174,99,.14);
+}
+
+.day .box.partial{
+  background:rgba(111,174,99,.25);
+  border-color:rgba(111,174,99,.55);
+}
+
+.day .box.today{
+  box-shadow:0 0 0 2px var(--gold) inset;
+}
+
+.day .box.full.today{
+  box-shadow:
+    0 0 0 2px var(--gold) inset,
+    0 0 0 3px rgba(111,174,99,.14);
+}
+
+.day .dlabel{
+  font-family:'Space Mono',monospace;
+  font-size:9.5px;
+  color:var(--text-faint);
+}
+.day .dlabel{font-family:'Space Mono',monospace;font-size:9.5px;color:var(--text-faint);}
+.card-box{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:12px;}
+.settings-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.link-btn{font-family:'Space Mono',monospace;font-size:11.5px;color:var(--gold);background:none;border:none;cursor:pointer;text-decoration:underline;padding:0;}
+.day-picker{display:flex;gap:5px;margin-bottom:16px;flex-wrap:wrap;}
+.day-pill{flex:1;min-width:38px;padding:7px 2px;text-align:center;border-radius:10px;border:1px solid var(--line);background:var(--card);cursor:pointer;}
+.day-pill .dp-name{font-family:'Space Mono',monospace;font-size:9.5px;color:var(--text-faint);}
+.day-pill .dp-tag{font-size:9.5px;color:var(--text-dim);margin-top:2px;}
+.day-pill.workout{border-color:rgba(168,50,74,0.4);}
+.day-pill.workout .dp-tag{color:var(--red);font-weight:700;}
+.day-pill.selected{background:var(--card-hi);box-shadow:0 0 0 2px var(--gold) inset;}
+.day-pill.rest .dp-tag{color:var(--green);}
+.workout-head{font-family:'Fraunces',serif;font-size:19px;font-weight:600;margin-bottom:3px;}
+.workout-sub{font-size:12.5px;color:var(--text-dim);margin-bottom:14px;}
+.note-card{background:rgba(212,162,76,0.05);border:1px solid rgba(212,162,76,0.18);border-radius:12px;padding:10px 13px;font-size:11.5px;color:var(--text-faint);margin-bottom:12px;line-height:1.5;}
+.info-toggles{display:flex;gap:8px;margin-bottom:14px;}
+.info-toggle{flex:1;background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden;}
+.info-toggle summary{padding:8px 10px;font-size:12px;color:var(--text-dim);cursor:pointer;list-style:none;display:flex;align-items:center;gap:6px;}
+.info-toggle summary::-webkit-details-marker{display:none;}
+.info-toggle[open] summary{color:var(--gold);}
+.info-toggle .info-body{padding:0 10px 10px;font-size:11px;color:var(--text-faint);line-height:1.5;}
+.rest-card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:26px 18px;text-align:center;color:var(--text-dim);font-family:'Fraunces',serif;font-size:15px;line-height:1.6;}
+.group-label{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--gold);margin:16px 0 8px;}
+.group-label:first-of-type{margin-top:0;}
+.ex-card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:10px;display:flex;gap:12px;align-items:center;}
+.ex-fig-box{width:72px;height:80px;flex-shrink:0;background:var(--bg-deep);border-radius:10px;display:flex;align-items:center;justify-content:center;overflow:hidden;}
+.ex-fig{width:46px;height:46px;}
+.ex-info{flex:1;min-width:0;}
+.ex-name{font-size:13.5px;font-weight:700;margin-bottom:2px;}
+.ex-cue{font-size:11px;color:var(--text-dim);line-height:1.4;margin-bottom:6px;}
+.ex-reps{font-family:'Space Mono',monospace;font-size:11px;color:var(--gold);background:rgba(212,162,76,0.08);display:inline-block;padding:2px 7px;border-radius:6px;margin-right:6px;}
+.ex-weight{display:inline-flex;align-items:center;gap:4px;margin-top:6px;}
+.ex-weight input{width:52px;background:var(--bg-deep);border:1px solid var(--line);border-radius:6px;color:var(--text);font-family:'Space Mono',monospace;font-size:11px;padding:3px 6px;}
+.ex-weight span{font-size:10.5px;color:var(--text-faint);}
+.complete-btn{width:100%;margin-top:6px;padding:13px;border-radius:12px;border:none;background:var(--red);color:var(--text);font-weight:700;font-size:13.5px;cursor:pointer;}
+.complete-btn.done{background:var(--gold-dim);}
+.complete-btn:disabled{opacity:0.4;cursor:default;}
+.variant-toggle{display:flex;gap:8px;margin-bottom:14px;}
+.variant-btn{flex:1;padding:9px 0;text-align:center;border-radius:10px;border:1px solid var(--line);background:var(--card);font-size:12px;font-weight:700;color:var(--text-dim);cursor:pointer;}
+.variant-btn.active{background:var(--gold);border-color:var(--gold);color:#1B2015;}
+.stick line{stroke:var(--gold);stroke-width:5;stroke-linecap:round;}
+.stick circle.head{fill:var(--gold);}
+.figure{transform-origin:50px 50px;}
+.eng-bob{animation:figBob 1.3s ease-in-out infinite;}
+.eng-bend{animation:figBend 1.5s ease-in-out infinite;}
+.eng-step{animation:figStep 1.1s ease-in-out infinite;}
+.eng-hold{animation:figHold 1.8s ease-in-out infinite;}
+@keyframes figBob{0%,100%{transform:translateY(0);}50%{transform:translateY(7px);}}
+@keyframes figBend{0%,100%{transform:scaleY(1) translateY(0);}50%{transform:scaleY(0.82) translateY(7px);}}
+@keyframes figStep{0%,100%{transform:translateX(-5px) rotate(-4deg);}50%{transform:translateX(5px) rotate(4deg);}}
+@keyframes figHold{0%,100%{transform:scale(1);}50%{transform:scale(1.02);}}
+.goal-pills{display:flex;gap:7px;margin-bottom:16px;flex-wrap:wrap;}
+.goal-pill{flex:1;min-width:100px;padding:9px 4px;text-align:center;border-radius:10px;border:1px solid var(--line);background:var(--card);font-size:12px;font-weight:700;color:var(--text-dim);cursor:pointer;}
+.goal-pill.active{background:var(--gold);border-color:var(--gold);color:#1B2015;}
+.meal-card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:6px 15px;margin-bottom:12px;}
+.meal-row{padding:12px 0;border-bottom:1px solid var(--line);}
+.meal-row:last-child{border-bottom:none;}
+.meal-row-title{font-family:'Fraunces',serif;font-size:13.5px;font-weight:600;color:var(--gold);margin-bottom:4px;}
+.meal-row-item{font-size:12px;color:var(--text);line-height:1.55;}
+.meal-row-alt{font-size:11px;color:var(--text-faint);margin-top:4px;}
+.meal-title{font-family:'Fraunces',serif;font-size:14.5px;font-weight:600;margin-bottom:6px;color:var(--gold);}
+.meal-item{font-size:12.5px;color:var(--text);line-height:1.6;}
+.meal-item b{color:var(--gold);}
+.meal-alt{font-size:11.5px;color:var(--text-dim);margin-top:4px;padding-top:6px;border-top:1px dashed var(--line);}
+.badges-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;}
+.badge{background:var(--bg-deep);border:1px solid var(--gold-dim);border-radius:20px;padding:6px 11px;font-size:11px;color:var(--gold);display:flex;align-items:center;gap:5px;}
+.badge.locked{opacity:0.35;border-color:var(--line);color:var(--text-faint);}
+.level-tag{font-family:'Space Mono',monospace;font-size:12px;color:var(--gold);background:rgba(212,162,76,0.1);border-radius:8px;padding:6px 10px;display:inline-block;margin-top:8px;}
+.qa-btn{width:100%;padding:14px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--text);font-weight:700;font-size:13.5px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;}
+.measure-row{display:flex;gap:8px;margin-bottom:10px;}
+.measure-row input{flex:1;background:var(--bg-deep);border:1px solid var(--line);border-radius:10px;padding:10px 12px;color:var(--text);font-family:'Manrope',sans-serif;font-size:13px;}
+.measure-row button{padding:10px 16px;border-radius:10px;border:none;background:var(--red);color:var(--text);font-weight:700;font-size:12.5px;cursor:pointer;}
+.measure-log{font-family:'Space Mono',monospace;font-size:11.5px;color:var(--text-dim);display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--line);}
+.milestone-row{display:flex;align-items:center;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--line);}
+.milestone-row:last-child{border-bottom:none;}
+.milestone-label{font-size:12.5px;color:var(--text-dim);}
+.milestone-label b{color:var(--text);display:block;font-family:'Fraunces',serif;font-size:13.5px;font-weight:600;}
+.milestone-value{font-family:'Space Mono',monospace;font-size:14px;color:var(--gold);}
+.milestone-locked{font-size:11px;color:var(--text-faint);}
+.milestone-input{width:70px;background:var(--bg-deep);border:1px solid var(--gold-dim);border-radius:8px;padding:7px 9px;color:var(--text);font-family:'Space Mono',monospace;font-size:13px;}
+.milestone-save{margin-left:6px;padding:7px 10px;border-radius:8px;border:none;background:var(--red);color:var(--text);font-size:11.5px;font-weight:700;cursor:pointer;}
+.milestone-summary{margin-top:10px;padding-top:10px;border-top:1px dashed var(--line);font-family:'Space Mono',monospace;font-size:12.5px;color:var(--gold);text-align:center;}
+footer{margin-top:32px;font-size:11px;color:var(--text-faint);text-align:center;line-height:1.6;}
+.modal-overlay{position:fixed;inset:0;background:rgba(10,14,10,0.75);display:none;align-items:center;justify-content:center;padding:18px;z-index:50;}
+.modal-overlay.show{display:flex;}
+.modal-card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:24px 20px;max-width:400px;width:100%;max-height:88vh;overflow-y:auto;}
+.modal-title{font-family:'Fraunces',serif;font-size:19px;font-weight:600;margin-bottom:5px;}
+.modal-sub{font-size:12.5px;color:var(--text-dim);margin-bottom:18px;line-height:1.5;}
+.field-label{font-size:11.5px;color:var(--text-dim);margin-bottom:5px;font-weight:600;}
+.field-input{width:100%;background:var(--bg-deep);border:1px solid var(--line);border-radius:10px;padding:10px 11px;color:var(--text);font-size:13.5px;margin-bottom:14px;}
+.pill-row{display:flex;gap:7px;margin-bottom:14px;flex-wrap:wrap;}
+.pill{padding:7px 12px;border-radius:20px;border:1px solid var(--line);background:var(--bg-deep);color:var(--text-dim);font-size:12px;cursor:pointer;}
+.pill.on{background:var(--gold);border-color:var(--gold);color:#1B2015;font-weight:700;}
+.modal-actions{display:flex;gap:9px;margin-top:4px;}
+.btn-primary{flex:1;padding:12px;border-radius:12px;border:none;background:var(--red);color:var(--text);font-weight:700;font-size:13.5px;cursor:pointer;}
+.btn-secondary{padding:12px 15px;border-radius:12px;border:1px solid var(--line);background:transparent;color:var(--text-dim);font-weight:600;font-size:13.5px;cursor:pointer;}
+.modal-msg{font-size:11.5px;color:var(--red);margin-top:-8px;margin-bottom:12px;min-height:14px;}
+.share-card{background:linear-gradient(160deg,#1E2A20,#141B15);border:1px solid var(--gold-dim);border-radius:16px;padding:22px;text-align:center;}
+.share-card .brand{font-size:22px;}
+.share-stat{font-family:'Space Mono',monospace;font-size:12px;color:var(--text-dim);margin-top:10px;}
+.share-stat b{color:var(--gold);font-size:15px;display:block;}
+</style>
+</head>
+<body>
+<div id="authGate" class="auth-gate show">
+  <div class="auth-gate-card">
+    <div class="brand" style="font-size:36px;text-align:center;margin-bottom:6px;">N<span style="color:#A8324A;">a</span>r</div>
+    <div class="auth-gate-sub">Davam etmək üçün hesabına daxil ol</div>
+    <button id="googleSignInBtn" class="auth-google-btn" type="button">
+      <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.4 29.3 35 24 35c-6.1 0-11-4.9-11-11s4.9-11 11-11c2.8 0 5.3 1 7.3 2.7l6-6C33.6 6.1 29.1 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.7-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.6 16 19 13 24 13c2.8 0 5.3 1 7.3 2.7l6-6C33.6 6.1 29.1 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-1.8 13.5-4.9l-6.2-5.2C29.3 35.6 26.8 36.5 24 36.5c-5.2 0-9.6-3.5-11.2-8.3l-6.5 5C9.6 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.3-2.3 4.2-4.2 5.6l6.2 5.2C40.6 36 44 30.6 44 24c0-1.3-.1-2.7-.4-3.5z"/></svg>
+      Google ilə daxil ol
+    </button>
+
+    <div class="auth-divider"><span>və ya</span></div>
+
+    <form id="emailAuthForm" class="auth-email-form">
+      <input id="authEmailInput" class="auth-input" type="email" placeholder="Email" autocomplete="email" required>
+      <input id="authPasswordInput" class="auth-input" type="password" placeholder="Parol" autocomplete="current-password" required>
+      <button id="emailAuthSubmitBtn" class="btn-primary" type="submit" style="width:100%;">Daxil ol</button>
+    </form>
+
+    <div class="auth-links">
+      <a href="#" id="forgotPasswordLink">Şifrəni unutmusan?</a>
+      <span id="authModeToggle">Hesabın yoxdur? <a href="#" id="authModeToggleLink">Qeydiyyatdan keç</a></span>
+    </div>
+
+    <div id="authGateMsg" class="auth-gate-msg"></div>
+  </div>
+</div>
+<div class="wrap">
+<header>
+  <div class="brand">N<span>a</span>r</div>
+  <div class="head-right">
+    <div class="auth-user-name" id="authUserName"></div>
+    <div class="icon-btn" id="statsBtn" title="Statistika">📊</div>
+    <div class="icon-btn" id="profileBtn" title="Profil">👤</div>
+    <div class="icon-btn" id="signOutBtn" title="Çıxış">⏻</div>
+    <div class="streak" id="streakBadge">🔥 0 gün</div>
+  </div>
+</header>
+<div class="eyebrow">gündəlik vərdiş izləyicisi</div>
+
+<div class="tabs">
+  <div class="tab-btn active" data-tab="today">Bugün</div>
+  <div class="tab-btn" data-tab="workout">Məşq</div>
+  <div class="tab-btn" data-tab="food">Qidalanma</div>
+</div>
+
+<div class="view active" id="view-today">
+  <div class="nar-stage">
+    <svg class="nar-svg" id="narSvg" viewBox="0 0 200 200">
+      <defs>
+        <radialGradient id="pomShellGrad" cx="38%" cy="28%" r="78%">
+          <stop offset="0%" stop-color="#5A6E52"/>
+          <stop offset="50%" stop-color="#283729"/>
+          <stop offset="100%" stop-color="#121A14"/>
+        </radialGradient>
+        <linearGradient id="pomCrownGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#6B7E5F"/>
+          <stop offset="100%" stop-color="#3D4C3F"/>
+        </linearGradient>
+        <radialGradient id="pomGlowGrad" cx="50%" cy="45%" r="60%">
+          <stop offset="0%" stop-color="#FF6F5E" stop-opacity="0.9"/>
+          <stop offset="100%" stop-color="#FF6F5E" stop-opacity="0"/>
+        </radialGradient>
+        <filter id="glowBlur" x="-60%" y="-60%" width="220%" height="220%">
+          <feGaussianBlur stdDeviation="7"/>
+        </filter>
+      </defs>
+      <ellipse class="nar-glow" id="narGlow" cx="100" cy="108" rx="66" ry="76" fill="url(#pomGlowGrad)" filter="url(#glowBlur)" style="opacity:0"/>
+      <path class="nar-body" d="M100 34 C60 34 34 68 34 112 C34 152 62 178 100 178 C138 178 166 152 166 112 C166 68 140 34 100 34 Z" fill="url(#pomShellGrad)" stroke="#3D4C3F" stroke-width="2"/>
+      <path d="M78 28 L86 10 L92 26 L100 6 L108 26 L114 10 L122 28 C110 22 90 22 78 28 Z" fill="url(#pomCrownGrad)"/>
+      <g id="seedGroup"></g>
+    </svg>
+    <div class="nar-caption" id="narCaption">Bu gün <b>0 / 3</b> vərdiş tamamlandı</div>
+  </div>
+  <div class="list" id="habitList"></div>
+  <div class="week"><div class="week-label">Son 7 gün</div><div class="week-grid" id="weekGrid"></div></div>
+  <div class="note-card" style="margin-top:20px;text-align:center;">📊 Nişanlar, statistika və çəki qeydin üçün yuxarıdakı statistika düyməsinə bax.</div>
+</div>
+
+<div class="view" id="view-workout">
+  <div class="nar-stage">
+    <svg class="nar-svg small" id="narSvgProg" viewBox="0 0 200 200">
+      <defs>
+        <radialGradient id="pomShellGradSmall" cx="38%" cy="28%" r="78%">
+          <stop offset="0%" stop-color="#5A6E52"/>
+          <stop offset="50%" stop-color="#283729"/>
+          <stop offset="100%" stop-color="#121A14"/>
+        </radialGradient>
+        <linearGradient id="pomCrownGradSmall" x1="0%" y1="100%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#6B7E5F"/>
+          <stop offset="100%" stop-color="#3D4C3F"/>
+        </linearGradient>
+        <radialGradient id="pomGlowGradSmall" cx="50%" cy="45%" r="60%">
+          <stop offset="0%" stop-color="#FF6F5E" stop-opacity="0.9"/>
+          <stop offset="100%" stop-color="#FF6F5E" stop-opacity="0"/>
+        </radialGradient>
+        <filter id="glowBlurSmall" x="-60%" y="-60%" width="220%" height="220%">
+          <feGaussianBlur stdDeviation="7"/>
+        </filter>
+      </defs>
+      <ellipse class="nar-glow" id="narGlowProg" cx="100" cy="108" rx="66" ry="76" fill="url(#pomGlowGradSmall)" filter="url(#glowBlurSmall)" style="opacity:0"/>
+      <path class="nar-body" d="M100 34 C60 34 34 68 34 112 C34 152 62 178 100 178 C138 178 166 152 166 112 C166 68 140 34 100 34 Z" fill="url(#pomShellGradSmall)" stroke="#3D4C3F" stroke-width="2"/>
+      <path d="M78 28 L86 10 L92 26 L100 6 L108 26 L114 10 L122 28 C110 22 90 22 78 28 Z" fill="url(#pomCrownGradSmall)"/>
+      <g id="seedGroupProg"></g>
+    </svg>
+    <div class="nar-caption" id="progCaption">2 aylıq proqres: <b>0 / 32</b> məşq</div>
+  </div>
+  <div class="day-picker" id="dayPicker"></div>
+  <div id="workoutBody"></div>
+</div>
+
+<div class="view" id="view-food">
+  <div class="goal-pills" id="goalPills">
+    <div class="goal-pill" data-goal="loss">Arıqlama</div>
+    <div class="goal-pill" data-goal="maintain">Saxlama</div>
+    <div class="goal-pill" data-goal="gain">Artırma</div>
+  </div>
+  <div class="day-picker" id="foodDayPicker"></div>
+  <div id="foodBody"></div>
+</div>
+
+<footer>Məlumatlar bu cihazda saxlanılır və yalnız sənə görünür.</footer>
+</div>
+
+<div class="modal-overlay" id="profileModal">
+  <div class="modal-card">
+    <div class="modal-title">Profilini tamamla</div>
+    <div class="modal-sub">Bu məlumat profildə saxlanılır və qidalanma menyunu fərdiləşdirmək üçün istifadə olunur.</div>
+    <div class="field-label">Boy (sm)</div>
+    <input class="field-input" type="number" id="inHeight" placeholder="məs. 175">
+    <div class="field-label">Çəki (kq)</div>
+    <input class="field-input" type="number" id="inWeight" placeholder="məs. 68">
+    <div class="field-label">Cins</div>
+    <div class="pill-row" id="genderRow">
+      <div class="pill" data-val="kişi">Kişi</div>
+      <div class="pill" data-val="qadın">Qadın</div>
+      <div class="pill" data-val="demirəm">Demək istəmirəm</div>
+    </div>
+    <div class="field-label">Hədəf</div>
+    <div class="pill-row" id="goalRow">
+      <div class="pill" data-val="loss">Çəki salma</div>
+      <div class="pill" data-val="maintain">Çəki saxlama</div>
+      <div class="pill" data-val="gain">Çəki artırma</div>
+    </div>
+    <div class="modal-msg" id="profileMsg"></div>
+    <div class="modal-actions"><button class="btn-primary" id="saveProfileBtn">Davam et</button></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="shareModal">
+  <div class="modal-card">
+    <div class="share-card">
+      <div class="brand">N<span style="color:var(--red);">a</span>r</div>
+      <div class="share-stat"><b id="shareStreak">0</b>gün ardıcıl</div>
+      <div class="share-stat"><b id="shareSessions">0 / 32</b>məşq tamamlandı</div>
+      <div class="share-stat" style="margin-top:14px;color:var(--text-faint);">🌱 nar.app</div>
+    </div>
+    <div class="modal-sub" style="margin-top:14px;text-align:center;">Ekran görüntüsü çəkib dostlarınla paylaş!</div>
+    <div class="modal-actions"><button class="btn-secondary" id="shareCloseBtn" style="flex:1;">Bağla</button></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="statsModal">
+  <div class="modal-card">
+    <div class="modal-title">Statistika</div>
+    <div class="modal-sub">Nailiyyətlərin, həftəlik xülasən və çəki qeydin.</div>
+
+    <div class="section-label">Nailiyyətlər</div>
+    <div class="card-box">
+      <div id="levelTag"></div>
+      <div class="badges-row" id="badgesRow"></div>
+    </div>
+
+    <div class="section-label">Bu həftə</div>
+    <div class="card-box" id="weeklySummary"></div>
+
+    <div class="section-label">Əvvəl / Sonra</div>
+    <div class="card-box" id="milestoneBox"></div>
+
+    <div class="section-label">Paylaş</div>
+    <button class="qa-btn" id="shareBtn" style="margin-bottom:10px;">↗ Nəticəni paylaş</button>
+
+    <div class="section-label">Kömək lazımdır?</div>
+    <button class="qa-btn" id="qaBtn">💬 Sualını göndər</button>
+
+    <div class="modal-actions" style="margin-top:16px;"><button class="btn-secondary" id="statsCloseBtn" style="flex:1;">Bağla</button></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="onboardModal">
+  <div class="modal-card">
+    <div class="modal-title">Necə işləyir?</div>
+    <div class="modal-sub" style="margin-bottom:16px;">Nar 3 hissədən ibarətdir:</div>
+    <div style="font-size:13.5px;line-height:2;margin-bottom:18px;">
+      <b style="color:var(--gold);">Bugün</b> — gündəlik vərdişlərini (su, yuxu, məşq) izlə.<br>
+      <b style="color:var(--gold);">Məşq</b> — həftəlik proqramını gün-gün icra et.<br>
+      <b style="color:var(--gold);">Qidalanma</b> — hədəfinə uyğun nə yeyəcəyini bil.
+    </div>
+    <div class="modal-actions"><button class="btn-primary" id="onboardCloseBtn">Başlayaq</button></div>
+  </div>
+</div>
+
+
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
+<script src="js/firebase-auth.js"></script>
+<script src="js/config.js"></script>
+<script src="js/images.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/state.js"></script>
+<script src="js/habits.js"></script>
+<script src="js/workout.js"></script>
+<script src="js/food.js"></script>
+<script src="js/profile.js"></script>
+<script src="js/badges.js"></script>
+<script src="js/stats.js"></script>
+<script src="js/init.js"></script>
+
+</body>
+</html>
